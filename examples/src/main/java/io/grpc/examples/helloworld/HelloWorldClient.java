@@ -63,6 +63,17 @@ public class HelloWorldClient {
       return;
     }
     logger.info("Greeting: " + response.getMessage());
+
+    GreetRequest request1 = GreetRequest.newBuilder().setReq(name).build();
+    GreetReply response1;
+
+    try {
+      response1 = blockingStub.greet(request1);
+    } catch (StatusRuntimeException e) {
+      logger.log(Level.WARNING, "RPC failed: {0}", e.getStatus());
+      return;
+    }
+    logger.info("Greeting: " + response1.getResp());
   }
 
   /**

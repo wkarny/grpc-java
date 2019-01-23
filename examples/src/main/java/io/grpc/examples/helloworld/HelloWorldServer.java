@@ -21,6 +21,8 @@ import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
 import java.io.IOException;
 import java.util.logging.Logger;
+import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Server that manages startup/shutdown of a {@code Greeter} server.
@@ -80,6 +82,45 @@ public class HelloWorldServer {
       HelloReply reply = HelloReply.newBuilder().setMessage("Hello " + req.getName()).build();
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
+    }
+
+    @Override
+    public void greet(GreetRequest r, StreamObserver<GreetReply> rs) {
+      String rpl;
+      Calendar cal = Calendar.getInstance();
+       
+          // Set time of calendar to 18:00
+          cal.set(Calendar.HOUR_OF_DAY, 12);
+          cal.set(Calendar.MINUTE, 0);
+          cal.set(Calendar.SECOND, 0);
+          cal.set(Calendar.MILLISECOND, 0);
+           
+          // Check if current time is after 18:00 today
+          boolean after = Calendar.getInstance().after(cal);
+           
+          if (after) {
+                cal.set(Calendar.HOUR_OF_DAY, 18);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+            after = Calendar.getInstance().after(cal);
+            if(after) {
+              //System.out.println("Good Evening");
+              rpl = "Good Evening"; 
+            }
+            else {
+              //System.out.println("Good After Noon");
+              rpl = "Good Afternoon";
+            }
+          }
+          else {
+              //System.out.println("Good Morning");
+            rpl = "Good Morning";
+          }
+
+          GreetReply reply = GreetReply.newBuilder().setResp(rpl).build();
+          rs.onNext(reply);
+          rs.onCompleted();
     }
   }
 }
